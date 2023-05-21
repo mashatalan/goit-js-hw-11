@@ -1,9 +1,10 @@
 import { Notifications } from './notifications';
-import { refs } from './refs';
 import { ImageService } from './imageService';
-import { generateMarkup } from './markup';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+
+import { refs } from './refs';
+import { generateMarkup } from './markup';
 
 
 const notify = new Notifications();
@@ -53,15 +54,17 @@ async function loadImagesList() {
 
   const markup = generateMarkup(images); // generate markup
   gallery.insertAdjacentHTML('beforeend', markup); // append html
-  observer.observe(gallery.lastElementChild); // set observer target
-  lightbox.refresh();
 
-  scroll();
+  if (gallery.lastElementChild) {
+    observer.observe(gallery.lastElementChild); // set observer target
+    lightbox.refresh();
+    scroll();
+  }
 }
 
 async function loadMore() {
   if (imageService.total <= imageService.perPage * imageService.currentPage) { // check if there is something to load
-    notify.showWarningMessage('No more images');
+    notify.showWarningMessage('We\'re sorry, but you\'ve reached the end of search results.');
     return null;
   }
 
